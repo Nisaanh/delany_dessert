@@ -8,7 +8,7 @@
     <div class="container">
         <div class="hero-content">
             <h1 class="hero-title">Selamat Datang di Delany Dessert</h1>
-            <p class="hero-subtitle">Affordable Yummy Desserts - Dessert Berkualitas dengan Harga Terjangkau</p>
+            <p class="hero-subtitle">Affordable Yummy Desserts - Dessert Berkualitas dengan Harga Terjangkau.</p>
             <div class="hero-actions">
                 <a href="{{ route('products.index') }}" class="btn btn-light btn-lg hero-btn">
                     <i class="fas fa-shopping-bag me-2"></i> Lihat Semua Produk
