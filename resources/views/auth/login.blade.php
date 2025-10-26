@@ -64,18 +64,7 @@
                 </div>
             </div>
 
-            <!-- Demo Account Info -->
-            <div class="card mt-4 border-warning">
-                <div class="card-header bg-warning text-dark">
-                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Akun Demo</h6>
-                </div>
-                <div class="card-body">
-                    <small class="text-muted">
-                        <strong>Username:</strong> admin<br>
-                        <strong>Password:</strong> password
-                    </small>
-                </div>
-            </div>
+            
         </div>
     </div>
 </div>
