@@ -37,18 +37,32 @@
                         <i class="fas fa-image" style="font-size: 3rem; color: #ccc;"></i>
                     </div>
                     @endif
-                    {{-- <span class="product-badge">Rp {{ number_format($product->price, 0, ',', '.') }}</span> --}}
                 </div>
                 <div class="product-body">
                     <span class="product-category">{{ $product->category->name }}</span>
                     <h5 class="product-name">{{ $product->name }}</h5>
                     <p class="product-description">{{ Str::limit($product->description, 80) }}</p>
+                    
+                    <!-- Product Footer dengan Tombol Keranjang -->
                     <div class="product-footer">
                         <span class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
-                        <div>
+                        <div class="product-actions">
                             <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-info text-white" title="Lihat">
                                 <i class="fas fa-eye"></i>
                             </a>
+                            @auth
+                            <form action="{{ route('cart.add', $product) }}" method="POST" style="display: inline;">
+                                @csrf
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-sm btn-success" title="Tambah ke Keranjang">
+                                    <i class="fas fa-cart-plus"></i>
+                                </button>
+                            </form>
+                            @else
+                            <a href="{{ route('login') }}" class="btn btn-sm btn-outline-secondary" title="Login untuk belanja">
+                                <i class="fas fa-cart-plus"></i>
+                            </a>
+                            @endauth
                             <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-warning" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
@@ -68,7 +82,7 @@
     </div>
 
     <!-- Pagination -->
-    <div class="col-12">
+    <div class="col-12 mt-4">
         <div class="d-flex justify-content-between align-items-center">
             <div class="text-muted">
                 Menampilkan <strong>{{ $products->firstItem() }}-{{ $products->lastItem() }}</strong>
@@ -100,16 +114,18 @@
         </div>
     </div>
     @else
-    <div style="text-align: center; padding: 3rem;">
-        <i class="fas fa-inbox" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
-        <p style="color: #999; font-size: 1.1rem;">
+    <div class="text-center py-5">
+        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+        <p class="text-muted fs-5">
             @if($categoryId)
             Tidak ada produk dalam kategori ini.
             @else
             Belum ada produk.
             @endif
-            <a href="{{ route('products.create') }}">Tambah produk sekarang</a>
         </p>
+        <a href="{{ route('products.create') }}" class="btn btn-primary mt-2">
+            <i class="fas fa-plus me-2"></i>Tambah Produk Sekarang
+        </a>
     </div>
     @endif
 </div>
@@ -135,18 +151,6 @@
         width: 100%;
         height: 250px;
         object-fit: cover;
-    }
-
-    .product-badge {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: var(--secondary-color);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
     }
 
     .product-body {
@@ -191,6 +195,17 @@
         font-weight: 700;
         color: var(--primary-color);
         flex-shrink: 0;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .product-actions .btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
     }
 
     /* Style untuk pagination */
@@ -248,18 +263,16 @@
             font-size: 0.85rem;
             padding: 0.35rem 1rem;
         }
-    }
 
-
-    @media (max-width: 768px) {
         .product-footer {
             flex-direction: column;
             align-items: start;
             gap: 1rem;
         }
 
-        .product-footer .btn {
-            margin-bottom: 0.5rem;
+        .product-actions {
+            width: 100%;
+            justify-content: space-between;
         }
 
         .d-flex.justify-content-between.align-items-center {
@@ -267,7 +280,22 @@
             gap: 1rem;
             text-align: center;
         }
+
+        .pagination {
+            margin-top: 1rem;
+        }
     }
 
+    @media (max-width: 576px) {
+        .product-actions {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .product-actions .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
 </style>
 @endsection

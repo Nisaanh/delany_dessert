@@ -64,7 +64,41 @@
                         <p>{{ $product->description }}</p>
                     </div>
 
-                    <div class="product-actions">
+                    <!-- Form Tambah ke Keranjang -->
+                    <div class="cart-section mt-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Tambah ke Keranjang</h5>
+                                @auth
+                                <form action="{{ route('cart.add', $product) }}" method="POST">
+                                    @csrf
+                                    <div class="row g-3 align-items-end">
+                                        <div class="col-md-4">
+                                            <label for="quantity" class="form-label">Jumlah</label>
+                                            <select name="quantity" id="quantity" class="form-select" required>
+                                                @for($i = 1; $i <= 10; $i++)
+                                                <option value="{{ $i }}">{{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <button type="submit" class="btn btn-primary w-100">
+                                                <i class="fas fa-cart-plus me-2"></i>Tambah ke Keranjang
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                                @else
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Silakan <a href="{{ route('login') }}" class="alert-link">login</a> untuk menambahkan produk ke keranjang.
+                                </div>
+                                @endauth
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-actions mt-4">
                         <a href="{{ route('products.edit', $product) }}" class="btn btn-primary btn-edit">
                             <i class="fas fa-edit me-2"></i>Edit Produk
                         </a>
@@ -74,65 +108,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Product Details Tabs -->
-            {{-- <div class="product-tabs">
-                <nav class="tab-nav">
-                    <button class="tab-link active" data-tab="description">Deskripsi Lengkap</button>
-                    <button class="tab-link" data-tab="ingredients">Bahan & Komposisi</button>
-                    <button class="tab-link" data-tab="nutrition">Informasi Gizi</button>
-                </nav>
-
-                <div class="tab-content">
-                    <div class="tab-pane active" id="description">
-                        <div class="tab-text">
-                            <p>{{ $product->description }}</p>
-                            <p>Dibuat dengan bahan-bahan pilihan terbaik yang diolah secara higienis untuk memberikan pengalaman dessert yang tak terlupakan. Setiap gigitan memberikan sensasi rasa yang sempurna dengan tekstur yang lembut dan aroma yang menggugah selera.</p>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane" id="ingredients">
-                        <div class="ingredients-list">
-                            <h4>Bahan Utama:</h4>
-                            <ul>
-                                <li>Tepung terigu protein tinggi</li>
-                                <li>Butter premium</li>
-                                <li>Gula pasir halus</li>
-                                <li>Telur segar</li>
-                                <li>Vanilla extract</li>
-                                <li>Susu full cream</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane" id="nutrition">
-                        <div class="nutrition-info">
-                            <table class="nutrition-table">
-                                <tr>
-                                    <td>Energi</td>
-                                    <td>250 kkal</td>
-                                </tr>
-                                <tr>
-                                    <td>Karbohidrat</td>
-                                    <td>35g</td>
-                                </tr>
-                                <tr>
-                                    <td>Protein</td>
-                                    <td>5g</td>
-                                </tr>
-                                <tr>
-                                    <td>Lemak</td>
-                                    <td>10g</td>
-                                </tr>
-                                <tr>
-                                    <td>Gula</td>
-                                    <td>20g</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
         </div>
     </div>
 </section>
@@ -146,11 +121,12 @@
         </div>
         
         <div class="products-grid">
-            <!-- This would typically be populated with related products -->
             <div class="related-placeholder">
-                <i class="fas fa-utensils"></i>
-                <p>Produk terkait akan ditampilkan di sini</p>
-                <a href="{{ route('products.index') }}" class="btn btn-primary">Lihat Semua Produk</a>
+                <i class="fas fa-utensils fa-3x text-muted mb-3"></i>
+                <p class="text-muted mb-3">Produk terkait akan ditampilkan di sini</p>
+                <a href="{{ route('products.index') }}" class="btn btn-primary">
+                    <i class="fas fa-bag-shopping me-2"></i>Lihat Semua Produk
+                </a>
             </div>
         </div>
     </div>
@@ -358,37 +334,13 @@
     font-size: 1.05rem;
 }
 
-.product-features {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-bottom: 2rem;
+.cart-section .card {
+    border: 2px solid var(--accent-color);
+    border-radius: 15px;
 }
 
-.feature-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem;
-    background: var(--light-color);
-    border-radius: 10px;
-    transition: all 0.3s ease;
-}
-
-.feature-item:hover {
-    background: var(--accent-color);
-    transform: translateY(-2px);
-}
-
-.feature-item i {
-    color: var(--primary-color);
-    font-size: 1.2rem;
-}
-
-.feature-item span {
-    color: var(--dark-color);
-    font-weight: 500;
-    font-size: 0.9rem;
+.cart-section .card-body {
+    padding: 2rem;
 }
 
 .product-actions {
@@ -428,18 +380,6 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-.related-placeholder i {
-    font-size: 3rem;
-    color: var(--secondary-color);
-    margin-bottom: 1rem;
-}
-
-.related-placeholder p {
-    color: #666;
-    margin-bottom: 2rem;
-    font-size: 1.1rem;
-}
-
 /* Responsive Design */
 @media (max-width: 992px) {
     .product-main {
@@ -465,31 +405,13 @@
         font-size: 2rem;
     }
     
-    .product-features {
-        grid-template-columns: 1fr;
-    }
-    
-    .tab-nav {
-        flex-direction: column;
-        border-bottom: none;
-    }
-    
-    .tab-link {
-        border-bottom: 1px solid #eee;
-        border-left: 3px solid transparent;
-    }
-    
-    .tab-link.active {
-        border-left-color: var(--primary-color);
-        border-bottom-color: #eee;
-    }
-    
     .product-actions {
         flex-direction: column;
     }
     
     .btn-edit, .btn-back {
         justify-content: center;
+        width: 100%;
     }
 }
 
@@ -510,52 +432,9 @@
         font-size: 1.8rem;
     }
     
-    .feature-item {
-        padding: 0.75rem;
+    .cart-section .card-body {
+        padding: 1.5rem;
     }
 }
 </style>
-@endsection
-
-@section('extra-js')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Tab functionality
-    const tabLinks = document.querySelectorAll('.tab-link');
-    const tabPanes = document.querySelectorAll('.tab-pane');
-    
-    tabLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            const targetTab = this.getAttribute('data-tab');
-            
-            // Remove active class from all tabs and panes
-            tabLinks.forEach(tab => tab.classList.remove('active'));
-            tabPanes.forEach(pane => pane.classList.remove('active'));
-            
-            // Add active class to current tab and pane
-            this.classList.add('active');
-            document.getElementById(targetTab).classList.add('active');
-        });
-    });
-    
-    // Image zoom effect
-    const mainImage = document.querySelector('.main-image');
-    if (mainImage) {
-        mainImage.addEventListener('mousemove', function(e) {
-            const image = this.querySelector('.product-image');
-            const { left, top, width, height } = this.getBoundingClientRect();
-            const x = (e.clientX - left) / width * 100;
-            const y = (e.clientY - top) / height * 100;
-            
-            image.style.transformOrigin = `${x}% ${y}%`;
-        });
-        
-        mainImage.addEventListener('mouseleave', function() {
-            const image = this.querySelector('.product-image');
-            image.style.transformOrigin = 'center center';
-            image.style.transform = 'scale(1)';
-        });
-    }
-});
-</script>
 @endsection

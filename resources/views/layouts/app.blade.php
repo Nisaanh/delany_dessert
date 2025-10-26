@@ -468,7 +468,6 @@
     border-radius: 8px;
 }
 
-
         /* Responsive */
         @media (max-width: 768px) {
             .header-section h1 {
@@ -574,7 +573,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('home') }}">Beranda</a>
                     </li>
@@ -584,11 +583,50 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('about') }}">Tentang Kami</a>
                     </li>
+                </ul>
+                
+                <ul class="navbar-nav ms-auto">
+                    @auth
+                    <li class="nav-item">
+                        <span class="nav-link text-white">Halo, {{ Auth::user()->name }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('cart.index') }}">
+                            <i class="fas fa-shopping-cart me-1"></i>
+                            Keranjang
+                            @php
+                                $cart = Auth::user()->cart ?? null;
+                            @endphp
+                            @if($cart && $cart->item_count > 0)
+                            <span class="badge bg-danger ms-1">{{ $cart->item_count }}</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="nav-link btn btn-link text-white" style="border: none; background: none;">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </button>
+                        </form>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link btn btn-secondary text-white ms-2" href="{{ route('products.create') }}">
                             <i class="fas fa-plus"></i> Tambah Produk
                         </a>
                     </li>
+                    @else
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('register') }}">
+                            <i class="fas fa-user-plus me-1"></i>Register
+                        </a>
+                    </li>
+                    @endauth
                 </ul>
             </div>
         </div>
