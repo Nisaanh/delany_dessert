@@ -105,12 +105,9 @@
                         </span>
                     </div>
                     <hr>
-                    <button class="btn btn-primary w-100 py-2" onclick="showCheckoutAlert()">
+                    <a href="{{ route('checkout.index') }}" class="btn btn-primary w-100 py-2">
                         <i class="fas fa-credit-card me-2"></i>Proses Checkout
-                    </button>
-                    <small class="text-muted d-block mt-2 text-center">
-                        *Fitur checkout sedang dalam pengembangan
-                    </small>
+                    </a>
                 </div>
             </div>
         </div>
@@ -147,10 +144,4 @@
     z-index: 10;
 }
 </style>
-
-<script>
-function showCheckoutAlert() {
-    alert('Fitur checkout sedang dalam pengembangan. Terima kasih!');
-}
-</script>
 @endsection
