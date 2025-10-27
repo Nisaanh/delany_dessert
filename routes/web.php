@@ -85,7 +85,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 
     Route::middleware(['auth'])->group(function () {
-        Route::get('/admin/dashboard', [AdminController::class, 'index'])
+        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
             ->name('admin.dashboard');
     });
 });
