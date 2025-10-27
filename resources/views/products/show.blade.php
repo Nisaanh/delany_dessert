@@ -65,7 +65,7 @@
                     </div>
 
                     <!-- Form Tambah ke Keranjang -->
-                    <div class="cart-section mt-4">
+                    {{-- <div class="cart-section mt-4">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Tambah ke Keranjang</h5>
@@ -96,16 +96,68 @@
                                 @endauth
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
-                    <div class="product-actions mt-4">
+                    {{-- Tampilkan keranjang hanya untuk user biasa atau guest --}}
+@if(!auth()->check() || (auth()->check() && !auth()->user()->is_admin))
+<div class="cart-section mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Tambah ke Keranjang</h5>
+            @auth
+                {{-- User Biasa --}}
+                <form action="{{ route('cart.add', $product) }}" method="POST">
+                    @csrf
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label for="quantity" class="form-label">Jumlah</label>
+                            <select name="quantity" id="quantity" class="form-select" required>
+                                @for($i = 1; $i <= 10; $i++)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-cart-plus me-2"></i>Tambah ke Keranjang
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            @else
+                {{-- Guest --}}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Silakan <a href="{{ route('login') }}" class="alert-link">login</a> untuk menambahkan produk ke keranjang.
+                </div>
+            @endauth
+        </div>
+    </div>
+</div>
+@endif
+
+                    {{-- <div class="product-actions mt-4">
                         <a href="{{ route('products.edit', $product) }}" class="btn btn-primary btn-edit">
                             <i class="fas fa-edit me-2"></i>Edit Produk
                         </a>
                         <a href="{{ route('products.index') }}" class="btn btn-outline-secondary btn-back">
                             <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar
                         </a>
-                    </div>
+                    </div> --}}
+                    <div class="product-actions mt-4">
+    <!-- Tombol Edit - Hanya untuk Admin -->
+    @auth
+        @if(auth()->user()->is_admin)
+            <a href="{{ route('products.edit', $product) }}" class="btn btn-primary btn-edit">
+                <i class="fas fa-edit me-2"></i>Edit Produk
+            </a>
+        @endif
+    @endauth
+    
+    <a href="{{ route('products.index') }}" class="btn btn-outline-secondary btn-back">
+        <i class="fas fa-arrow-left me-2"></i>Kembali ke Daftar
+    </a>
+</div>
                 </div>
             </div>
         </div>

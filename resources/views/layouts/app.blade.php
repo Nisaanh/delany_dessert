@@ -331,11 +331,12 @@
 
         .navbar-brand img,
         .footer-logo {
-            height: 40px; /* Sesuaikan tinggi logo sesuai kebutuhan */
+            height: 40px;
+            /* Sesuaikan tinggi logo sesuai kebutuhan */
             margin-right: 10px;
-             border-radius: 8px;
+            border-radius: 8px;
         }
-        
+
         .nav-btn {
             padding: 0.5rem 1rem;
             border: 1px solid #dee2e6;
@@ -370,6 +371,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -380,11 +382,25 @@
             animation: fadeInUp 0.6s ease forwards;
         }
 
-        .product-card:nth-child(2) { animation-delay: 0.1s; }
-        .product-card:nth-child(3) { animation-delay: 0.2s; }
-        .product-card:nth-child(4) { animation-delay: 0.3s; }
-        .product-card:nth-child(5) { animation-delay: 0.4s; }
-        .product-card:nth-child(6) { animation-delay: 0.5s; }
+        .product-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .product-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .product-card:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .product-card:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        .product-card:nth-child(6) {
+            animation-delay: 0.5s;
+        }
 
         /* Footer */
         footer {
@@ -462,11 +478,12 @@
             color: var(--dark-color);
             margin-bottom: 0.5rem;
         }
+
         .footer-logo {
-    height: 35px;
-    width: auto;
-    border-radius: 8px;
-}
+            height: 35px;
+            width: auto;
+            border-radius: 8px;
+        }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -529,6 +546,7 @@
 
         /* Accessibility Improvements */
         @media (prefers-reduced-motion: reduce) {
+
             .product-card,
             .btn,
             .page-link,
@@ -559,63 +577,93 @@
                 color: white;
             }
         }
+
     </style>
     @yield('extra-css')
 </head>
 <body>
+
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">
-                <img src="{{ asset('logo.jpeg') }}" alt="Delany Desserts Logo">
+            <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
+                <img src="{{ asset('logo.jpeg') }}" alt="Delany Dessert Logo" class="navbar-logo me-2">
+
             </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('home') }}">Beranda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('products.index') }}">Produk</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('about') }}">Tentang Kami</a>
-                    </li>
-                </ul>
-                
-                <ul class="navbar-nav ms-auto">
-                    @auth
-                    <li class="nav-item">
-                        <span class="nav-link text-white">Halo, {{ Auth::user()->name }}</span>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('cart.index') }}">
-                            <i class="fas fa-shopping-cart me-1"></i>
-                            Keranjang
-                            @php
-                                $cart = Auth::user()->cart ?? null;
-                            @endphp
-                            @if($cart && $cart->item_count > 0)
-                            <span class="badge bg-danger ms-1">{{ $cart->item_count }}</span>
-                            @endif
+                        <a class="nav-link" href="{{ route('home') }}">
+                            <i class="fas fa-home me-1"></i>Beranda
                         </a>
                     </li>
                     <li class="nav-item">
-                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="nav-link btn btn-link text-white" style="border: none; background: none;">
-                                <i class="fas fa-sign-out-alt me-1"></i>Logout
-                            </button>
-                        </form>
+                        <a class="nav-link" href="{{ route('products.index') }}">
+                            <i class="fas fa-box me-1"></i>Produk
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-secondary text-white ms-2" href="{{ route('products.create') }}">
-                            <i class="fas fa-plus"></i> Tambah Produk
+                        <a class="nav-link" href="{{ route('about') }}">
+                            <i class="fas fa-info-circle me-1"></i>Tentang
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    @auth
+                    @if(auth()->user()->is_admin)
+                    <!-- Menu Admin -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.dashboard') }}">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('products.create') }}">
+                            <i class="fas fa-plus me-1"></i>Tambah Produk
                         </a>
                     </li>
                     @else
+                    <!-- Menu User -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('cart.index') }}">
+                            <i class="fas fa-shopping-cart me-1"></i>Keranjang
+                            @php
+                            $cartCount = Auth::user()->cart ? Auth::user()->cart->item_count : 0;
+                            @endphp
+                            @if($cartCount > 0)
+                            <span class="badge bg-danger ms-1">{{ $cartCount }}</span>
+                            @endif
+                        </a>
+                    </li>
+                    @endif
+
+                    <!-- User Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>{{ Auth::user()->name }}
+                            @if(auth()->user()->is_admin)
+                            <span class="badge bg-warning ms-1">Admin</span>
+                            @endif
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    @else
+                    <!-- Menu Guest -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}">
                             <i class="fas fa-sign-in-alt me-1"></i>Login
@@ -652,12 +700,12 @@
             <div class="row">
                 <div class="col-md-4 footer-section">
                     <div class="d-flex align-items-center mb-3">
-                    <img src="{{ asset('logo.jpeg') }}" alt="Delany Dessert Logo" class="footer-logo">
-                    <h5 class="ms-2 mb-0" style="font-weight:700;">Delany Dessert</h5>
-                </div>
+                        <img src="{{ asset('logo.jpeg') }}" alt="Delany Dessert Logo" class="footer-logo">
+                        <h5 class="ms-2 mb-0" style="font-weight:700;">Delany Dessert</h5>
+                    </div>
                     <p>Menyediakan dessert berkualitas dengan harga terjangkau untuk semua kalangan.</p>
                     <div class="social-links">
-                         <a href="https://www.instagram.com/delanydesserts/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.instagram.com/delanydesserts/" target="_blank"><i class="fab fa-instagram"></i></a>
                         <a href="https://tiktok.com/@delanydesserts" target="_blank"><i class="fab fa-tiktok"></i></a>
                         <a href="https://wa.me/6287864048193" target="_blank"><i class="fab fa-whatsapp"></i></a>
                     </div>

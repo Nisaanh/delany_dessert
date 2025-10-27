@@ -3,10 +3,10 @@
 @section('title', 'Register - Delany Dessert')
 
 @section('content')
-<div class="header-section">
+{{-- <div class="header-section">
     <h1>Daftar Akun Baru</h1>
     <p>Bergabung dengan Delany Dessert untuk pengalaman berbelanja yang lebih baik</p>
-</div>
+</div> --}}
 
 <div class="container mb-5">
     <div class="row justify-content-center">
@@ -83,6 +83,7 @@
 .card {
     border-radius: 15px;
     border: none;
+    margin-top: 40px;
 }
 
 .card-header {

@@ -46,7 +46,7 @@
                     <!-- Product Footer dengan Tombol Keranjang -->
                     <div class="product-footer">
                         <span class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
-                        <div class="product-actions">
+                        {{-- <div class="product-actions">
                             <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-info text-white" title="Lihat">
                                 <i class="fas fa-eye"></i>
                             </a>
@@ -73,7 +73,46 @@
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
-                        </div>
+                        </div> --}}
+                        <div class="product-actions">
+    <!-- Tombol Lihat Detail - Tampil untuk semua -->
+    <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-info text-white" title="Lihat">
+        <i class="fas fa-eye"></i>
+    </a>
+    
+    <!-- Tombol Keranjang - Hanya untuk user -->
+    @auth
+        @if(!auth()->user()->is_admin)
+            <form action="{{ route('cart.add', $product) }}" method="POST" style="display: inline;">
+                @csrf
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn btn-sm btn-success" title="Tambah ke Keranjang">
+                    <i class="fas fa-cart-plus"></i>
+                </button>
+            </form>
+        @endif
+    @else
+        <a href="{{ route('login') }}" class="btn btn-sm btn-outline-secondary" title="Login untuk belanja">
+            <i class="fas fa-cart-plus"></i>
+        </a>
+    @endauth
+    
+    <!-- Tombol Edit & Delete - Hanya untuk Admin -->
+    @auth
+        @if(auth()->user()->is_admin)
+            <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-warning" title="Edit">
+                <i class="fas fa-edit"></i>
+            </a>
+            <form action="{{ route('products.destroy', $product) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </form>
+        @endif
+    @endauth
+</div>
                     </div>
                 </div>
             </div>
