@@ -9,20 +9,72 @@
 </div>
 
 <div class="container mb-5">
+    <!-- Search Bar -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <form action="{{ route('products.index') }}" method="GET" class="search-form">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control search-input" 
+                           placeholder="Cari produk, kategori, atau deskripsi..." 
+                           value="{{ request('search') }}">
+                    @if(request('category'))
+                        <input type="hidden" name="category" value="{{ request('category') }}">
+                    @endif
+                    <button type="submit" class="btn btn-search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    @if(request('search'))
+                    <a href="{{ route('products.index', request('category') ? ['category' => request('category')] : []) }}" 
+                       class="btn btn-clear-search" title="Hapus pencarian">
+                        <i class="fas fa-times"></i>
+                    </a>
+                    @endif
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Kategori Filter -->
     <div class="text-center mb-4">
         <h5 class="fw-bold mb-3" style="color:#3E2723;">Pilih Kategori</h5>
         <div class="d-flex flex-wrap justify-content-center gap-2">
-            <a href="{{ route('products.index') }}" class="category-tag {{ !$categoryId ? 'active' : '' }}">
+            <a href="{{ route('products.index', request('search') ? ['search' => request('search')] : []) }}" 
+               class="category-tag {{ !$categoryId ? 'active' : '' }}">
                 Semua
             </a>
             @foreach($categories as $category)
-            <a href="{{ route('products.index', ['category' => $category->id]) }}" class="category-tag {{ $categoryId == $category->id ? 'active' : '' }}">
+            @php
+                $params = ['category' => $category->id];
+                if (request('search')) {
+                    $params['search'] = request('search');
+                }
+            @endphp
+            <a href="{{ route('products.index', $params) }}" class="category-tag {{ $categoryId == $category->id ? 'active' : '' }}">
                 {{ $category->name }}
             </a>
             @endforeach
         </div>
     </div>
+
+    <!-- Info Hasil Pencarian -->
+    @if(request('search'))
+    <div class="alert alert-info alert-search mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <span>
+                <i class="fas fa-search me-2"></i>
+                Hasil pencarian untuk: <strong>"{{ request('search') }}"</strong>
+                @if($categoryId)
+                    dalam kategori: <strong>{{ $categories->where('id', $categoryId)->first()->name ?? '' }}</strong>
+                @endif
+                <span class="badge bg-primary ms-2">{{ $products->total() }} hasil</span>
+            </span>
+            <a href="{{ route('products.index', request('category') ? ['category' => request('category')] : []) }}" 
+               class="btn-close-search">
+                <i class="fas fa-times me-1"></i>Hapus Pencarian
+            </a>
+        </div>
+    </div>
+    @endif
 
     @if($products->count() > 0)
     <div class="row g-4">
@@ -42,15 +94,19 @@
                     <span class="product-category">{{ $product->category->name }}</span>
                     <h5 class="product-name">{{ $product->name }}</h5>
                     <p class="product-description">{{ Str::limit($product->description, 80) }}</p>
-                    
+
                     <!-- Product Footer dengan Tombol Keranjang -->
                     <div class="product-footer">
                         <span class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
-                        {{-- <div class="product-actions">
+                        <div class="product-actions">
+                            <!-- Tombol Lihat Detail - Tampil untuk semua -->
                             <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-info text-white" title="Lihat">
                                 <i class="fas fa-eye"></i>
                             </a>
+
+                            <!-- Tombol Keranjang - Hanya untuk user -->
                             @auth
+                            @if(!auth()->user()->is_admin)
                             <form action="{{ route('cart.add', $product) }}" method="POST" style="display: inline;">
                                 @csrf
                                 <input type="hidden" name="quantity" value="1">
@@ -58,11 +114,16 @@
                                     <i class="fas fa-cart-plus"></i>
                                 </button>
                             </form>
+                            @endif
                             @else
                             <a href="{{ route('login') }}" class="btn btn-sm btn-outline-secondary" title="Login untuk belanja">
                                 <i class="fas fa-cart-plus"></i>
                             </a>
                             @endauth
+
+                            <!-- Tombol Edit & Delete - Hanya untuk Admin -->
+                            @auth
+                            @if(auth()->user()->is_admin)
                             <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-warning" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
@@ -73,46 +134,9 @@
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
-                        </div> --}}
-                        <div class="product-actions">
-    <!-- Tombol Lihat Detail - Tampil untuk semua -->
-    <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-info text-white" title="Lihat">
-        <i class="fas fa-eye"></i>
-    </a>
-    
-    <!-- Tombol Keranjang - Hanya untuk user -->
-    @auth
-        @if(!auth()->user()->is_admin)
-            <form action="{{ route('cart.add', $product) }}" method="POST" style="display: inline;">
-                @csrf
-                <input type="hidden" name="quantity" value="1">
-                <button type="submit" class="btn btn-sm btn-success" title="Tambah ke Keranjang">
-                    <i class="fas fa-cart-plus"></i>
-                </button>
-            </form>
-        @endif
-    @else
-        <a href="{{ route('login') }}" class="btn btn-sm btn-outline-secondary" title="Login untuk belanja">
-            <i class="fas fa-cart-plus"></i>
-        </a>
-    @endauth
-    
-    <!-- Tombol Edit & Delete - Hanya untuk Admin -->
-    @auth
-        @if(auth()->user()->is_admin)
-            <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-warning" title="Edit">
-                <i class="fas fa-edit"></i>
-            </a>
-            <form action="{{ route('products.destroy', $product) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </form>
-        @endif
-    @endauth
-</div>
+                            @endif
+                            @endauth
+                        </div>
                     </div>
                 </div>
             </div>
@@ -131,7 +155,7 @@
             <ul class="pagination mb-0">
                 {{-- Previous Page Link --}}
                 <li class="page-item {{ $products->onFirstPage() ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ $products->previousPageUrl() }}" aria-label="Previous">
+                    <a class="page-link" href="{{ $products->appends(request()->query())->previousPageUrl() }}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
@@ -139,13 +163,13 @@
                 {{-- Pagination Numbers --}}
                 @for ($i = 1; $i <= $products->lastPage(); $i++)
                     <li class="page-item {{ $products->currentPage() == $i ? 'active' : '' }}">
-                        <a class="page-link" href="{{ $products->url($i) }}">{{ $i }}</a>
+                        <a class="page-link" href="{{ $products->appends(request()->query())->url($i) }}">{{ $i }}</a>
                     </li>
                     @endfor
 
                     {{-- Next Page Link --}}
                     <li class="page-item {{ !$products->hasMorePages() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $products->nextPageUrl() }}" aria-label="Next">
+                        <a class="page-link" href="{{ $products->appends(request()->query())->nextPageUrl() }}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -156,15 +180,29 @@
     <div class="text-center py-5">
         <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
         <p class="text-muted fs-5">
-            @if($categoryId)
-            Tidak ada produk dalam kategori ini.
+            @if(request('search'))
+                Tidak ada produk yang cocok dengan pencarian "<strong>{{ request('search') }}</strong>"
+                @if($categoryId)
+                    dalam kategori {{ $categories->where('id', $categoryId)->first()->name ?? '' }}
+                @endif
+            @elseif($categoryId)
+                Tidak ada produk dalam kategori ini.
             @else
-            Belum ada produk.
+                Belum ada produk.
             @endif
         </p>
+        @auth
+        @if(auth()->user()->is_admin)
         <a href="{{ route('products.create') }}" class="btn btn-primary mt-2">
             <i class="fas fa-plus me-2"></i>Tambah Produk Sekarang
         </a>
+        @endif
+        @endauth
+        @if(request('search') || $categoryId)
+        <a href="{{ route('products.index') }}" class="btn btn-outline-primary mt-2 ms-2">
+            <i class="fas fa-list me-2"></i>Lihat Semua Produk
+        </a>
+        @endif
     </div>
     @endif
 </div>
@@ -247,6 +285,73 @@
         font-size: 0.8rem;
     }
 
+    /* Style untuk search form */
+    .search-form {
+        margin-bottom: 1rem;
+    }
+
+    .search-input {
+        border: 2px solid #d4a574;
+        border-right: none;
+        border-radius: 30px 0 0 30px;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+        box-shadow: none;
+        border-color: #b37a4c;
+    }
+
+    .btn-search {
+        background: linear-gradient(135deg, #b37a4c, #d4a574);
+        border: 2px solid #d4a574;
+        border-left: none;
+        border-radius: 0 30px 30px 0;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-search:hover {
+        background: linear-gradient(135deg, #a36a3c, #c49564);
+        color: white;
+    }
+
+    .btn-clear-search {
+        background: #f8f9fa;
+        border: 2px solid #dee2e6;
+        border-left: none;
+        color: #6c757d;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-clear-search:hover {
+        background: #e9ecef;
+        color: #495057;
+    }
+
+    /* Alert untuk hasil pencarian */
+    .alert-search {
+        border-radius: 15px;
+        border: none;
+        background: rgba(212, 165, 116, 0.1);
+        color: #5c4033;
+    }
+
+    .btn-close-search {
+        color: #d4a574;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+    }
+
+    .btn-close-search:hover {
+        color: #b37a4c;
+    }
+
     /* Style untuk pagination */
     .pagination {
         margin-bottom: 0;
@@ -323,6 +428,12 @@
         .pagination {
             margin-top: 1rem;
         }
+
+        .alert-search .d-flex {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
     }
 
     @media (max-width: 576px) {
@@ -334,6 +445,15 @@
         .product-actions .btn {
             width: 100%;
             justify-content: center;
+        }
+
+        .search-input {
+            font-size: 0.9rem;
+            padding: 0.6rem 1rem;
+        }
+
+        .btn-search, .btn-clear-search {
+            padding: 0.6rem 1rem;
         }
     }
 </style>

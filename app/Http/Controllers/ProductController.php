@@ -11,27 +11,30 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = Category::all();
-
-        // Cek apakah ada parameter kategori
-        $categoryId = $request->get('category');
-
+        $query = Product::with('category');
+    
+        // Filter berdasarkan kategori
+        $categoryId = $request->query('category');
         if ($categoryId) {
-            // Jika ada parameter category, filter produk berdasarkan category_id
-            $products = Product::where('category_id', $categoryId)
-                ->with('category')
-                ->latest()
-                ->paginate(5)
-                ->withQueryString(); // TAMBAHKAN INI
-        } else {
-            // Jika tidak ada filter, tampilkan semua produk
-            $products = Product::with('category')
-                ->latest()
-                ->paginate(5)
-                ->withQueryString(); // TAMBAHKAN INI
+            $query->where('category_id', $categoryId);
         }
-
-        return view('products.index', compact('products', 'categories', 'categoryId'));
+        
+        // Pencarian berdasarkan kata kunci
+        $search = $request->query('search');
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%')
+                  ->orWhereHas('category', function($categoryQuery) use ($search) {
+                      $categoryQuery->where('name', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+        
+        $products = $query->latest()->paginate(5);
+        $categories = Category::all();
+        
+        return view('products.index', compact('products', 'categories', 'categoryId', 'search'));
     }
 
     /**
