@@ -36,7 +36,7 @@ class CheckoutController extends Controller
             'telepon' => 'required|string|min:8|max:20',
             'alamat' => 'required|string|max:2000',
             'catatan' => 'nullable|string|max:2000',
-            'metode_pembayaran' => 'required|in:Tunai,Dana,OVO,QRIS',
+            'metode_pembayaran' => 'required|in:Tunai,Dana,OVO,Gopay',
         ]);
 
         $cart = $this->getOrCreateCart();
