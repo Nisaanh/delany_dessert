@@ -64,7 +64,7 @@
                             <label class="form-label d-block">Metode Pembayaran <span class="text-danger">*</span></label>
                             <div class="btn-group" role="group" aria-label="Metode Pembayaran">
                                 @php
-                                    $methods = ['Tunai','Dana','OVO','QRIS'];
+                                    $methods = ['Tunai','Dana','OVO','Gopay'];
                                 @endphp
                                 @foreach($methods as $m)
                                     <input type="radio" class="btn-check" name="metode_pembayaran" id="pay_{{ $m }}" value="{{ $m }}" {{ old('metode_pembayaran') == $m ? 'checked' : (!$loop->first ? '' : 'checked') }}>
