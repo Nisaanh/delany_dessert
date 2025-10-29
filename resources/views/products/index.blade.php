@@ -11,31 +11,51 @@
 <div class="container mb-5">
     <!-- Search Bar -->
     <div class="row justify-content-center mb-4">
-        <div class="col-md-8">
-            <form action="{{ route('products.index') }}" method="GET" class="search-form">
-                <div class="input-group">
-                    <input type="text" name="search" class="form-control search-input" 
-                           placeholder="Cari produk, kategori, atau deskripsi..." 
-                           value="{{ request('search') }}">
-                    @if(request('category'))
-                        <input type="hidden" name="category" value="{{ request('category') }}">
-                    @endif
-                    <button type="submit" class="btn btn-search">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    @if(request('search'))
-                    <a href="{{ route('products.index', request('category') ? ['category' => request('category')] : []) }}" 
-                       class="btn btn-clear-search" title="Hapus pencarian">
-                        <i class="fas fa-times"></i>
-                    </a>
-                    @endif
-                </div>
-            </form>
-        </div>
+    <div class="col-lg-10">
+        <form action="{{ route('products.index') }}" method="GET" class="d-flex flex-wrap align-items-center gap-2">
+            
+            <!-- Search Input -->
+            <div class="flex-grow-1 position-relative">
+                <input type="text" name="search" class="form-control search-input" 
+                       placeholder="Cari produk, kategori, atau deskripsi..." 
+                       value="{{ request('search') }}">
+                @if(request('category'))
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                @endif
+            </div>
+
+            <!-- Search & Clear Buttons -->
+            <div class="d-flex align-items-center gap-2">
+                <button type="submit" class="btn btn-search">
+                    <i class="fas fa-search"></i>
+                </button>
+                @if(request('search'))
+                <a href="{{ route('products.index', request('category') ? ['category' => request('category')] : []) }}" 
+                   class="btn btn-clear-search" title="Hapus pencarian">
+                    <i class="fas fa-times"></i>
+                </a>
+                @endif
+            </div>
+
+            <!-- Category Filter (Dropdown) -->
+            <div class="ms-auto">
+                <select name="category" class="form-select category-dropdown" onchange="this.form.submit()">
+                    <option value="">Semua Kategori</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" 
+                            {{ request('category') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </form>
     </div>
+</div>
+
 
     <!-- Kategori Filter -->
-    <div class="text-center mb-4">
+    {{-- <div class="text-center mb-4">
         <h5 class="fw-bold mb-3" style="color:#3E2723;">Pilih Kategori</h5>
         <div class="d-flex flex-wrap justify-content-center gap-2">
             <a href="{{ route('products.index', request('search') ? ['search' => request('search')] : []) }}" 
@@ -54,7 +74,7 @@
             </a>
             @endforeach
         </div>
-    </div>
+    </div> --}}
 
     <!-- Info Hasil Pencarian -->
     @if(request('search'))
@@ -318,6 +338,39 @@
         background: linear-gradient(135deg, #a36a3c, #c49564);
         color: white;
     }
+    .category-dropdown {
+    border: 2px solid #d4a574;
+    border-radius: 30px;
+    padding: 0.6rem 1rem;
+    background: white;
+    color: #5c4033;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    min-width: 200px;
+}
+
+.category-dropdown:focus {
+    border-color: #b37a4c;
+    box-shadow: none;
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+    form.d-flex.flex-wrap {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .category-dropdown {
+        width: 100%;
+    }
+
+    .d-flex.align-items-center.gap-2 {
+        justify-content: flex-start;
+    }
+}
+
 
     .btn-clear-search {
         background: #f8f9fa;

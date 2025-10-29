@@ -88,4 +88,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
             ->name('admin.dashboard');
     });
+
+    // Route untuk admin orders management
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/orders', [AdminController::class, 'ordersIndex'])->name('admin.orders.index');
+    Route::get('/admin/orders/{order}', [AdminController::class, 'ordersShow'])->name('admin.orders.show');
+    Route::put('/admin/orders/{order}/update-status', [AdminController::class, 'updateStatus'])->name('admin.orders.update-status');
+});
+
 });
