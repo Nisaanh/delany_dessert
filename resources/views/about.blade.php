@@ -3,7 +3,6 @@
 @section('title', 'Tentang Kami - Delany Dessert')
 
 @section('content')
-<!-- Hero Section -->
 <section class="about-hero">
     <div class="container">
         <div class="hero-content text-center">
@@ -13,7 +12,6 @@
     </div>
 </section>
 
-<!-- Company Story -->
 <section class="section-padding">
     <div class="container">
         <div class="row align-items-center">
@@ -64,7 +62,6 @@
     </div>
 </section>
 
-<!-- Mission & Vision -->
 <section class="section-padding bg-light">
     <div class="container">
         <div class="row">
@@ -156,7 +153,6 @@
             </div>
         </div>
         <div class="row align-items-stretch">
-            <!-- Kontak Info -->
             <div class="col-lg-5 mb-4">
                 <div class="contact-info-wrapper">
                     <div class="contact-card-main">
@@ -203,7 +199,6 @@
                 </div>
             </div>
 
-            <!-- Google Maps -->
             <div class="col-lg-7 mb-4">
                 <div class="map-wrapper">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3951.3141822078887!2d112.61773437482044!3d-7.966166179388785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7882865ded0697%3A0x5a7d3e20a6d5b5e5!2sGreen%20Tombro%20Residence%202!5e0!3m2!1sid!2sid!4v1698765432107!5m2!1sid!2sid" width="100%" height="100%" style="border:0; border-radius: 15px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
@@ -224,7 +219,6 @@
     </div>
 </section>
 
-<!-- Social Media -->
 <section class="section-padding">
     <div class="container">
         <div class="row">
@@ -275,7 +269,6 @@
 
 @section('extra-css')
 <style>
-    /* Hero Section */
     .about-hero {
         background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
         color: white;
@@ -316,7 +309,7 @@
         line-height: 1.6;
     }
 
-    /* Section Styling */
+
     .section-padding {
         padding: 6rem 0;
     }
@@ -350,7 +343,6 @@
         line-height: 1.6;
     }
 
-    /* Story Section */
     .story-image {
         position: relative;
         border-radius: 20px;
@@ -423,7 +415,6 @@
         font-weight: 500;
     }
 
-    /* Purpose Cards */
     .purpose-card {
         background: white;
         padding: 3rem 2.5rem;
@@ -535,7 +526,6 @@
         z-index: 2;
     }
 
-    /* Contact Section */
     .contact-info-wrapper {
         height: 100%;
     }

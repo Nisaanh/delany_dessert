@@ -2,7 +2,6 @@
 
 @section('title', 'Checkout - Delany Dessert')
 
-{{-- Tambahkan di bagian atas file checkout.index --}}
 @if(session('error'))
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Error!</strong> {{ session('error') }}
@@ -64,11 +63,11 @@
                             <label class="form-label d-block">Metode Pembayaran <span class="text-danger">*</span></label>
                             <div class="btn-group" role="group" aria-label="Metode Pembayaran">
                                 @php
-                                    $methods = ['Tunai','Dana','OVO','Gopay'];
+                                $methods = ['Tunai','Dana','OVO','Gopay'];
                                 @endphp
                                 @foreach($methods as $m)
-                                    <input type="radio" class="btn-check" name="metode_pembayaran" id="pay_{{ $m }}" value="{{ $m }}" {{ old('metode_pembayaran') == $m ? 'checked' : (!$loop->first ? '' : 'checked') }}>
-                                    <label class="btn btn-outline-secondary me-1" for="pay_{{ $m }}">{{ $m }}</label>
+                                <input type="radio" class="btn-check" name="metode_pembayaran" id="pay_{{ $m }}" value="{{ $m }}" {{ old('metode_pembayaran') == $m ? 'checked' : (!$loop->first ? '' : 'checked') }}>
+                                <label class="btn btn-outline-secondary me-1" for="pay_{{ $m }}">{{ $m }}</label>
                                 @endforeach
                             </div>
                             @error('metode_pembayaran')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
@@ -101,12 +100,9 @@
                     <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
                         <div class="d-flex align-items-center">
                             @if($item->product->image)
-                            <img src="{{ asset('storage/' . $item->product->image) }}" 
-                                 alt="{{ $item->product->name }}" 
-                                 class="img-fluid rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                            <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}" class="img-fluid rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
                             @else
-                            <div class="bg-light rounded d-flex align-items-center justify-content-center me-2" 
-                                 style="width: 40px; height: 40px;">
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
                                 <i class="fas fa-image text-muted fa-xs"></i>
                             </div>
                             @endif
@@ -153,12 +149,21 @@
 </div>
 
 <style>
-.btn-primary {
-    background: linear-gradient(180deg, #f7a6c0, #f08fb5);
-    border: none;
-    box-shadow: 0 6px 18px rgba(240,143,181,0.12);
-}
-.header-section h1 { font-weight:700; color: #6b3a4a; }
-.sticky-top { position: sticky; z-index: 10; }
+    .btn-primary {
+        background: linear-gradient(180deg, #f7a6c0, #f08fb5);
+        border: none;
+        box-shadow: 0 6px 18px rgba(240, 143, 181, 0.12);
+    }
+
+    .header-section h1 {
+        font-weight: 700;
+        color: #6b3a4a;
+    }
+
+    .sticky-top {
+        position: sticky;
+        z-index: 10;
+    }
+
 </style>
 @endsection

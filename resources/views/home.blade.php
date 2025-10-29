@@ -3,7 +3,6 @@
 @section('title', 'Beranda - Delany Dessert')
 
 @section('content')
-<!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
         <div class="hero-content">
@@ -21,7 +20,6 @@
     </div>
 </section>
 
-<!-- Featured Products -->
 <section id="featured-products" class="section-padding">
     <div class="container">
         <div class="section-header text-center">
@@ -73,7 +71,6 @@
     </div>
 </section>
 
-<!-- Categories Section -->
 <section class="section-padding bg-light">
     <div class="container">
         <div class="section-header text-center">
@@ -106,7 +103,6 @@
     </div>
 </section>
 
-<!-- Stats Section -->
 <section class="section-padding">
     <div class="container">
         <div class="row text-center">

@@ -14,13 +14,13 @@
             <div class="text-end">
                 <div class="order-status-badge mb-2">
                     @php
-                        $statusColors = [
-                            'pending' => 'warning',
-                            'processing' => 'info',
-                            'completed' => 'success',
-                            'cancelled' => 'danger'
-                        ];
-                        $statusColor = $statusColors[strtolower($order->status)] ?? 'secondary';
+                    $statusColors = [
+                    'pending' => 'warning',
+                    'processing' => 'info',
+                    'completed' => 'success',
+                    'cancelled' => 'danger'
+                    ];
+                    $statusColor = $statusColors[strtolower($order->status)] ?? 'secondary';
                     @endphp
                     <span class="badge bg-{{ $statusColor }} fs-6 px-3 py-2">
                         {{ ucfirst($order->status) }}
@@ -69,7 +69,7 @@
                                 <label class="form-label text-muted small mb-1">Akun Terdaftar</label>
                                 <div class="fs-6 fw-semibold">
                                     <i class="fas fa-user-circle me-2 text-muted"></i>
-                                    {{ $order->user->name }} 
+                                    {{ $order->user->name }}
                                     <small class="text-muted">({{ $order->user->email }})</small>
                                 </div>
                             </div>
@@ -130,7 +130,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     @if($order->catatan)
                     <div class="mt-4">
                         <label class="form-label text-muted small mb-2">Catatan Khusus dari Customer</label>
@@ -171,7 +171,7 @@
                                 </div>
                             </button>
                         </form>
-                        
+
                         <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST">
                             @csrf
                             @method('PUT')
@@ -186,13 +186,12 @@
                                 </div>
                             </button>
                         </form>
-                        
+
                         <form action="{{ route('admin.orders.update-status', $order->id) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <input type="hidden" name="status" value="cancelled">
-                            <button type="submit" class="btn btn-danger w-100 py-3 action-btn" 
-                                    onclick="return confirm('Yakin ingin membatalkan pesanan ini? Tindakan ini tidak dapat dibatalkan.')">
+                            <button type="submit" class="btn btn-danger w-100 py-3 action-btn" onclick="return confirm('Yakin ingin membatalkan pesanan ini? Tindakan ini tidak dapat dibatalkan.')">
                                 <div class="d-flex align-items-center justify-content-center">
                                     <i class="fas fa-times-circle fa-lg me-3"></i>
                                     <div class="text-start">
@@ -216,7 +215,7 @@
                 <div class="card-body">
                     <div class="order-timeline">
                         @php
-                            $currentStatusLower = strtolower($order->status);
+                        $currentStatusLower = strtolower($order->status);
                         @endphp
                         <div class="timeline-item {{ in_array($currentStatusLower, ['pending', 'processing', 'completed']) ? 'active' : '' }}">
                             <div class="timeline-marker"></div>
@@ -247,106 +246,108 @@
 </div>
 
 <style>
+    .status-select {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        background: white;
+        min-width: 150px;
+    }
 
-.status-select {
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    background: white;
-    min-width: 150px;
-}
+    .status-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+        outline: none;
+    }
 
-.status-select:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
-    outline: none;
-}
+    .action-btn {
+        border: none;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        text-transform: none;
+    }
 
-.action-btn {
-    border: none;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    text-transform: none;
-}
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
 
-.action-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
+    .info-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #f8f9fa;
+    }
 
-.info-item {
-    padding: 12px 0;
-    border-bottom: 1px solid #f8f9fa;
-}
+    .info-item:last-child {
+        border-bottom: none;
+    }
 
-.info-item:last-child {
-    border-bottom: none;
-}
+    .order-timeline {
+        position: relative;
+        padding-left: 20px;
+    }
 
-.order-timeline {
-    position: relative;
-    padding-left: 20px;
-}
+    .timeline-item {
+        position: relative;
+        padding: 15px 0;
+        border-left: 2px solid #e9ecef;
+    }
 
-.timeline-item {
-    position: relative;
-    padding: 15px 0;
-    border-left: 2px solid #e9ecef;
-}
+    .timeline-item.active {
+        border-left-color: var(--primary-color);
+    }
 
-.timeline-item.active {
-    border-left-color: var(--primary-color);
-}
+    .timeline-item:last-child {
+        border-left: 2px solid transparent;
+    }
 
-.timeline-item:last-child {
-    border-left: 2px solid transparent;
-}
+    .timeline-marker {
+        position: absolute;
+        left: -11px;
+        top: 20px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #e9ecef;
+        border: 3px solid white;
+    }
 
-.timeline-marker {
-    position: absolute;
-    left: -11px;
-    top: 20px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #e9ecef;
-    border: 3px solid white;
-}
+    .timeline-item.active .timeline-marker {
+        background: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.2);
+    }
 
-.timeline-item.active .timeline-marker {
-    background: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.2);
-}
+    .timeline-content {
+        padding-left: 15px;
+    }
 
-.timeline-content {
-    padding-left: 15px;
-}
+    .order-status-badge .badge {
+        font-size: 0.9rem !important;
+        padding: 8px 16px !important;
+        border-radius: 20px !important;
+    }
 
-.order-status-badge .badge {
-    font-size: 0.9rem !important;
-    padding: 8px 16px !important;
-    border-radius: 20px !important;
-}
+    .alert-light {
+        background: rgba(255, 193, 7, 0.1);
+        border-left: 4px solid #ffc107;
+    }
 
-.alert-light {
-    background: rgba(255, 193, 7, 0.1);
-    border-left: 4px solid #ffc107;
-}
 </style>
 
 @if(session('success'))
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: '{{ session('success') }}',
-            timer: 3000,
-            showConfirmButton: false
+            icon: 'success'
+            , title: 'Berhasil!'
+            , text: '{{ session('
+            success ') }}'
+            , timer: 3000
+            , showConfirmButton: false
         });
     });
+
 </script>
 @endif
 @endsection

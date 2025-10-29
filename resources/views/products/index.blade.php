@@ -11,70 +11,43 @@
 <div class="container mb-5">
     <!-- Search Bar -->
     <div class="row justify-content-center mb-4">
-    <div class="col-lg-10">
-        <form action="{{ route('products.index') }}" method="GET" class="d-flex flex-wrap align-items-center gap-2">
-            
-            <!-- Search Input -->
-            <div class="flex-grow-1 position-relative">
-                <input type="text" name="search" class="form-control search-input" 
-                       placeholder="Cari produk, kategori, atau deskripsi..." 
-                       value="{{ request('search') }}">
-                @if(request('category'))
+        <div class="col-lg-10">
+            <form action="{{ route('products.index') }}" method="GET" class="d-flex flex-wrap align-items-center gap-2">
+
+                <!-- Search Input -->
+                <div class="flex-grow-1 position-relative">
+                    <input type="text" name="search" class="form-control search-input" placeholder="Cari produk, kategori, atau deskripsi..." value="{{ request('search') }}">
+                    @if(request('category'))
                     <input type="hidden" name="category" value="{{ request('category') }}">
-                @endif
-            </div>
+                    @endif
+                </div>
 
-            <!-- Search & Clear Buttons -->
-            <div class="d-flex align-items-center gap-2">
-                <button type="submit" class="btn btn-search">
-                    <i class="fas fa-search"></i>
-                </button>
-                @if(request('search'))
-                <a href="{{ route('products.index', request('category') ? ['category' => request('category')] : []) }}" 
-                   class="btn btn-clear-search" title="Hapus pencarian">
-                    <i class="fas fa-times"></i>
-                </a>
-                @endif
-            </div>
+                <!-- Search & Clear Buttons -->
+                <div class="d-flex align-items-center gap-2">
+                    <button type="submit" class="btn btn-search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    @if(request('search'))
+                    <a href="{{ route('products.index', request('category') ? ['category' => request('category')] : []) }}" class="btn btn-clear-search" title="Hapus pencarian">
+                        <i class="fas fa-times"></i>
+                    </a>
+                    @endif
+                </div>
 
-            <!-- Category Filter (Dropdown) -->
-            <div class="ms-auto">
-                <select name="category" class="form-select category-dropdown" onchange="this.form.submit()">
-                    <option value="">Semua Kategori</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}" 
-                            {{ request('category') == $category->id ? 'selected' : '' }}>
+                <!-- Category Filter (Dropdown) -->
+                <div class="ms-auto">
+                    <select name="category" class="form-select category-dropdown" onchange="this.form.submit()">
+                        <option value="">Semua Kategori</option>
+                        @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
                             {{ $category->name }}
                         </option>
-                    @endforeach
-                </select>
-            </div>
-        </form>
-    </div>
-</div>
-
-
-    <!-- Kategori Filter -->
-    {{-- <div class="text-center mb-4">
-        <h5 class="fw-bold mb-3" style="color:#3E2723;">Pilih Kategori</h5>
-        <div class="d-flex flex-wrap justify-content-center gap-2">
-            <a href="{{ route('products.index', request('search') ? ['search' => request('search')] : []) }}" 
-               class="category-tag {{ !$categoryId ? 'active' : '' }}">
-                Semua
-            </a>
-            @foreach($categories as $category)
-            @php
-                $params = ['category' => $category->id];
-                if (request('search')) {
-                    $params['search'] = request('search');
-                }
-            @endphp
-            <a href="{{ route('products.index', $params) }}" class="category-tag {{ $categoryId == $category->id ? 'active' : '' }}">
-                {{ $category->name }}
-            </a>
-            @endforeach
+                        @endforeach
+                    </select>
+                </div>
+            </form>
         </div>
-    </div> --}}
+    </div>
 
     <!-- Info Hasil Pencarian -->
     @if(request('search'))
@@ -84,12 +57,11 @@
                 <i class="fas fa-search me-2"></i>
                 Hasil pencarian untuk: <strong>"{{ request('search') }}"</strong>
                 @if($categoryId)
-                    dalam kategori: <strong>{{ $categories->where('id', $categoryId)->first()->name ?? '' }}</strong>
+                dalam kategori: <strong>{{ $categories->where('id', $categoryId)->first()->name ?? '' }}</strong>
                 @endif
                 <span class="badge bg-primary ms-2">{{ $products->total() }} hasil</span>
             </span>
-            <a href="{{ route('products.index', request('category') ? ['category' => request('category')] : []) }}" 
-               class="btn-close-search">
+            <a href="{{ route('products.index', request('category') ? ['category' => request('category')] : []) }}" class="btn-close-search">
                 <i class="fas fa-times me-1"></i>Hapus Pencarian
             </a>
         </div>
@@ -201,14 +173,14 @@
         <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
         <p class="text-muted fs-5">
             @if(request('search'))
-                Tidak ada produk yang cocok dengan pencarian "<strong>{{ request('search') }}</strong>"
-                @if($categoryId)
-                    dalam kategori {{ $categories->where('id', $categoryId)->first()->name ?? '' }}
-                @endif
+            Tidak ada produk yang cocok dengan pencarian "<strong>{{ request('search') }}</strong>"
+            @if($categoryId)
+            dalam kategori {{ $categories->where('id', $categoryId)->first()->name ?? '' }}
+            @endif
             @elseif($categoryId)
-                Tidak ada produk dalam kategori ini.
+            Tidak ada produk dalam kategori ini.
             @else
-                Belum ada produk.
+            Belum ada produk.
             @endif
         </p>
         @auth
@@ -338,38 +310,39 @@
         background: linear-gradient(135deg, #a36a3c, #c49564);
         color: white;
     }
-    .category-dropdown {
-    border: 2px solid #d4a574;
-    border-radius: 30px;
-    padding: 0.6rem 1rem;
-    background: white;
-    color: #5c4033;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    min-width: 200px;
-}
-
-.category-dropdown:focus {
-    border-color: #b37a4c;
-    box-shadow: none;
-}
-
-/* Responsif untuk layar kecil */
-@media (max-width: 768px) {
-    form.d-flex.flex-wrap {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: stretch;
-    }
 
     .category-dropdown {
-        width: 100%;
+        border: 2px solid #d4a574;
+        border-radius: 30px;
+        padding: 0.6rem 1rem;
+        background: white;
+        color: #5c4033;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        min-width: 200px;
     }
 
-    .d-flex.align-items-center.gap-2 {
-        justify-content: flex-start;
+    .category-dropdown:focus {
+        border-color: #b37a4c;
+        box-shadow: none;
     }
-}
+
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        form.d-flex.flex-wrap {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: stretch;
+        }
+
+        .category-dropdown {
+            width: 100%;
+        }
+
+        .d-flex.align-items-center.gap-2 {
+            justify-content: flex-start;
+        }
+    }
 
 
     .btn-clear-search {
@@ -505,9 +478,11 @@
             padding: 0.6rem 1rem;
         }
 
-        .btn-search, .btn-clear-search {
+        .btn-search,
+        .btn-clear-search {
             padding: 0.6rem 1rem;
         }
     }
+
 </style>
 @endsection
